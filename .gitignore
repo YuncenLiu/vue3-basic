@@ -128,3 +128,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.idea
+
+vue3_yun/node_modules
+vue3_yun_vite/node_modules
