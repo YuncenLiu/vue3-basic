@@ -36,3 +36,9 @@ cd vue3_yun_vite
 npm install
 npm run dev
 ```
+
+## 常用CompositionAPI
+
+### setUp
+
+1. setUp 是所有 CompositionAPI （组合API） 表演舞台，是 Vue3 中的新的配置项
