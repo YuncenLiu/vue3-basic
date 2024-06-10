@@ -75,3 +75,38 @@ npm run dev
    job.value.salary = '100K'
  }
 ```
+
+### reactive函数
+
+定义一个 对象类型 的响应式数据（基本类型不要用它，要用 ref 函数）
+
+语法：
+
+```js
+const 代理对象 = reactive(源对象)
+```
+
+接收一个对象、数组返回一个代理对象（proxy 对象）
+
+reactive 定义的响应式数据是 深层次的
+
+内部居于 ES6 的 proxy 实现，通过代理对象操作元对象内部数据进行操作
+
+### Vue3中的响应式原理
+
+#### Vue2的响应式
+
+原理通过 Object.defineProperty() 对属性的读取、修改进行拦截（数据劫持）
+```js
+Object.defineProperties(data,'count',{
+    get(){},
+    set(){}
+})
+```
+需要借助 $set 、  Vue.set 等方法才可以进行修改
+
+存在的问题
+1. 新增属性、删除属性，界面不会更新
+2. 直接通过下标修改数组，界面不会自动更新
+
+#### Vue3响应式
