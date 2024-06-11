@@ -40,14 +40,39 @@
 
 
     // Vue3 实现响应式
-    const p = new Proxy(person,{
-        get(target,element){
-
+ /*   const p = new Proxy(person,{
+        get(target,propName){
+            console.log(`${propName} 被读取`)
+            return target[propName]
         },
-        set(){
+        set(target, propName, value){
+            console.log(`${propName} 属性被更新，新的内容为 ${value}`)
+            target[propName] = value
+        },
+        deleteProperty(target, p) {
+            console.log(`${p} 被删除了`)
+            return delete target[p]
+        }
+    })*/
 
+
+    let obj = {a:1,b:2}
+    // Reflect.get(obj,'a') // 获取
+    // Reflect.set(obj,'a',6) // 修改
+    // Reflect.deleteProperty(obj,'a') // 删除
+
+    // 通过 Reflect 操作
+/*    const x1 = Reflect.defineProperty(obj, 'c' ,{
+        get(){
+            return 3
         }
     })
+    const x2 = Reflect.defineProperty(obj, 'c', {
+        get(){
+            return 4
+        }
+    })*/
+
 
 </script>
 </body>

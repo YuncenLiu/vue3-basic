@@ -11,10 +11,20 @@
     <button @click="deleteName">删除姓名</button>
     <br><br>
     <button @click="updateHobby">修改第一个爱好</button>
+    <Demo msg="你好啊" school="北京大学">
+      <template slot="hello1">
+        <span>你好1</span>
+      </template>
+      <template  slot="hello2">
+        <span>你好2</span>
+      </template>
+    </Demo>
   </div>
 </template>
 
 <script>
+
+import Demo from "@/components/Demo";
 import Vue from 'vue'
 export default {
   name: 'App',
@@ -26,6 +36,9 @@ export default {
         hobby: ['学习','吃饭']
       }
     }
+  },
+  components: {
+    Demo
   },
   methods:{
     addSex(){
