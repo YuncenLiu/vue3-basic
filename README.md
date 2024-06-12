@@ -212,3 +212,96 @@ watch(() => person.job, (newValue, oldValue) => {
    console.log('数据被修改了', newValue, oldValue)
 }, {deep: true})
 ```
+
+有几个容易出错的点，导致无法监视到
+
+1. 如果被监视对象是 ref 基础数据类型，此时不能通过 .value 去监视，.value 会直接获取到真实数据，无法走代理，则无法成功监视
+2. 如果被监视对象是 ref 对象、数组类型，则需要通过 .value 因为 ref 对象数组会再走一次 reactive，这个时候，才能成功监视到真正的代理对象
+
+### watchEffect函数
+
+`watch` 既要指明监视属性，也要指明监视回调
+
+`watchEffect` 不需要指明具体哪个属性，监视的回调中用到哪个属性，就监视哪个属性
+
+`watchEffect` 有点像 `computed`，但区别是
+1. `computed` 注重计算结果的值，所以必须要写返回值
+2. `watchEffect` 注重过程，不用写返回值
+
+```js
+watchEffect(()=>{
+   const x1 = sum.value
+   const x2 = person.job.salary
+   console.log(x1,x2)
+})
+```
+
+注意要引入啊 `import {watchEffect} from 'vue`
+
+### Vue3和Vue2的生命周期区别
+
+1. destroy 修改成了 unmount，销毁修改成卸载，对应上之前的 mount 装载
+2. Vue2 在el挂载之前会先执行 beforeCreate，不太合理，Vue3 在第一步即完成挂载
+
+Vue3的生命周期 同时支持 配置项和组合API形式，注意，组合API优先于配置项，但是有两个是组合式没有的
+
+```js
+setup() {
+    // 通过组合式API使用生命周期钩子
+    // beforeCreate 、 created 不支持组合式 API， setUp 就相当于这两个了。
+
+    // 组合式 要比 配置项快一点
+    // 真正开发的时候，不会同时使用 组合式 和 配置项
+    onBeforeMount(()=>{
+      console.log('onBeforeMount')
+    })
+
+    onMounted(()=>{
+      console.log('onMounted')
+    })
+
+    onBeforeUpdate(()=>{
+      console.log('onBeforeUpdate')
+    })
+
+    onUpdated(()=>{
+      console.log('onUpdated')
+    })
+
+    onBeforeUnmount(()=>{
+      console.log('onBeforeUnmount')
+    })
+
+    onUnmounted(()=>{
+      console.log('onUnmounted')
+    })
+  },
+  beforeCreate() {
+    console.log('beforeCreate')
+  },
+  created() {
+    console.log('created')
+  },
+  beforeMount() {
+    console.log('beforeMount')
+  },
+  mounted() {
+    console.log('mounted')
+  },
+  beforeUpdate() {
+    console.log('beforeUpdate')
+  },
+  updated() {
+    console.log('updated')
+  },
+  beforeUnmount() {
+    console.log('beforeUnmount')
+  },
+  unmounted() {
+    console.log('unmounted')
+  }
+```
+
+### 自定义hook函数
+
+hook 就是钩子函数

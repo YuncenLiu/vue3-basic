@@ -76,6 +76,19 @@ export default {
     },{deep:true})
 
 
+    // 如果对象是 ref属性，用下面这两种方式, 因为 ref 引用的数据类型如果是一个对象，则会再借助 reactive 包装一次，通过 .value 的方式，可以真正定位到 reactive，此时和上面保持一致了。
+    /*    watch(person.value,(newValue, oldValue)=>{
+          console.log('数据被修改了', newValue, oldValue)
+        })*/
+
+    // 通过使用 deep 深度监测，可以不用 .value 解决
+    /*
+        watch(person,(newValue,oldValue)=>{
+          console.log('数据被修改了', newValue, oldValue)
+        },{deep:true})
+    */
+
+
     return {
       sum,
       msg,

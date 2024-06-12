@@ -1,5 +1,4 @@
 <template>
-  <br><br>
   <button @click="isShowDemo = !isShowDemo">挂载 / 卸载</button>
   <Demo v-if="isShowDemo"/>
 </template>
