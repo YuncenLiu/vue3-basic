@@ -1,5 +1,6 @@
 # vue3-basic
  
+学到最后，发现Vue玩的就是一个代理
 
 ## 创建Vue3工程
 
@@ -305,3 +306,149 @@ setup() {
 ### 自定义hook函数
 
 hook 就是钩子函数
+
+作用就是代码复用，并不是像生命周期钩子样子，通过把公共功能点单独抽离出去，需要使用的时候再把它加载进来。
+
+hook 下创建 js 文件
+```js
+export default function(){
+    ....
+   return xxx;
+}
+```
+引用处：
+
+```js
+import usePoint from "@/hooks/usePoint"
+...
+let point = usePoint()
+```
+
+### toRef
+
+创建一个 ref 对象，其 value 指向另一个对象中的某个属性
+
+语法： `const name = toRef(person,'name')`
+
+将响应式对象中的第一层属性单独提供给外部使用，如果有多层，则继续在第一层之后往下找
+
+`toRefs` 与 `toRef` 功能一致，但是可以批量创建多个 `ref` 对象，语法 `toRefs(person)`
+
+经典写法：里面有100个就处理100个
+
+```js
+ return {
+   // 只能拆第一层
+   ...toRefs(person)
+ }
+```
+
+## 其他CompositionAPI
+
+### shallowReactive和shallowRef
+
++ shallowReactive： 只处理对象最外层属性的响应式（浅响应式）
++ shallowRef 只处理基本数据类型的响应式，不进行对象的响应式处理
+
+使用场景
+
+1. 如果一个对象数据，结构比较深，但变化只会影响最外层变化，使用 shallowReactive
+2. 如果对象后续功能不会改变对象中的属性，而是生成新的对象来替换 shallowRef
+
+> 但是通过和普通 ref 结合使用发现，先对 shallowRef进行操作，无反应后，再对普通 ref 进行操作，此时 shallowRef 会将之前未生效的操作一次性全部生效。
+
+### readonly与shallowReadonly
+
++ readonly: 让一个响应式数据变为只读的
++ shallowReadonly: 浅层次让一个响应式数据变成只读的
+
+应用场景：不希望数据被修改
+
+### toRaw和markRaw
+
+toRaw：将一个由 reactive 生成的响应式对象转化为普通对象，不可以对 ref 对象进行转化
+
+markRaw：将对象标记为非响应式对象，当渲染大的数据源列表时，提高性能。使用场景比 toRaw 高很多。
+
+### customRef实现防抖
+
+翻译：custom 自定义
+
+作用：创建一个自定义的 ref，并对其依赖项目跟踪和更新触发进行显示控制
+
+实现防抖效果
+
+```js
+setup(){
+ // 自定义 ref 函数
+ function myRef(value,delay){
+   return customRef((track, trigger)=>{
+     let timer
+     return {
+       get(){
+         console.log(`custom 读取 ${value} `)
+         track() // 通知 Vue 追踪 value 的变化
+         return value
+       },
+       set(newValue){
+         console.log(`custom 修改 ${value} , 新的值为 ${newValue}`)
+         value = newValue
+         clearTimeout(timer)
+         timer = setTimeout(()=>{
+           trigger() // 通知 Vue 去重新解析模版
+         },delay)
+       }
+     }
+   })
+ }
+
+ // let keyWord = ref('hello')
+ let keyWord = myRef('hello',500)
+ return {keyWord}
+}
+```
+
+### provide和inject
+
+provide：提供
+inject：注入
+
+实现祖孙组件间通信
+
+父组件有一个 provide 选项来提供数据，子组件有一个 inject 选项来开始使用这些数据
+
+顶级组件：
+```js
+ let car = reactive({name:'大奔',price:'40W'})
+ provide('car',car)
+```
+
+后代组件
+```js
+ let car = inject('car')
+```
+
+> 在任意一层子组件，通过直接修改响应式对象，可使得所有层组件同步修改！！！ 牛的
+
+
+### 响应式数据的判断
+
++ isRef 检查一个值是否为一个 `ref` 对象
++ isReactive 检查一个对象是否由 `reactive` 创建并响应式代理
++ isReadonly 检查一个对象是否由 `readonly` 创建的只读代理
++ isProxy 检查一个对象是否由 `reactive` 或者 `readonly` 方法创建的代理
+
+
+## Vue3新组件
+
+### Fragment
+
+在 Vue2 中，组件必须要由根标签
+
+在 Vue3 ，组件可以没有根标签，内部会将多个标签包含在一个 Fragment 虚拟元素中，好处就是减少标签层级，减少内存占用
+
+
+### Teleport
+
+teleport: 传送
+
