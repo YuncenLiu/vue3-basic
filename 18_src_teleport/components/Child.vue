@@ -1,24 +1,15 @@
 <template>
   <div class="child">
     <h3>我是Child组件 (T2)</h3>
-    <h3>{{sum}}</h3>
+    <Son/>
   </div>
 </template>
 
 <script>
-
-import {ref} from "vue";
-
+import Son from "@/components/Son";
 export default {
   name: "Child",
-  setup(){
-    let sum = ref(0)
-    return new Promise((resolve,reject)=>{
-      setTimeout(()=>{
-        resolve({sum})
-      },3000)
-    })
-  }
+  components: {Son}
 }
 </script>
 

@@ -1,20 +1,15 @@
 <template>
   <div class="son">
-    <h3>我是Son组件 (T3)，T1 的座驾是：{{name}}</h3>
+    <h3>我是Son组件 (T3)</h3>
+    <Dialog/>
   </div>
 </template>
 
 <script>
-import {inject, toRefs} from "vue";
-
+import Dialog from "@/components/Dialog";
 export default {
   name: "Son",
-  setup(){
-    let car = inject('car')
-    return {
-      ...toRefs(car)
-    }
-  }
+  components: {Dialog},
 }
 </script>
 

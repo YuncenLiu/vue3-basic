@@ -1,5 +1,5 @@
 # vue3-basic
- 
+
 学到最后，发现Vue玩的就是一个代理
 
 ## 创建Vue3工程
@@ -50,7 +50,8 @@ npm run dev
 4. 尽量不要 `vue2` 配置混用
    1. Vue2.x 配置的 （data、methods、computed...） 可以访问到 setUp 中属性，但是 setUp 不能访问 Vue2 配置
    2. 如果有重名，setUp 优先
-7. setUp 不能是一个 async 函数，因为返回值不再是 return 对象，而是 promise 模板看不到 return 对象的属性
+5. setUp 不能是一个 async 函数，因为返回值不再是 return 对象，而是 promise 模板看不到 return 对象的属性
+6. 后期也是可以返回一个 promise 实例，但是需要 Suspense 和异步组件配合
 
 ### ref函数
 
@@ -438,7 +439,6 @@ inject：注入
 + isReadonly 检查一个对象是否由 `readonly` 创建的只读代理
 + isProxy 检查一个对象是否由 `reactive` 或者 `readonly` 方法创建的代理
 
-
 ## Vue3新组件
 
 ### Fragment
@@ -451,4 +451,55 @@ inject：注入
 ### Teleport
 
 teleport: 传送
+
+作用是将标签内的 DOM，传送到 to 标签下，可以是 body 下，也可以是某一个 class 下面
+
+```html
+<teleport to="body">
+   ....
+</teleport>
+```
+
+上面的含义就是，将 teleport 标签内的 元素渲染到 body 同层级下
+
+![image-20240612202327108](images/README/image-20240612202327108.png)
+
+
+
+### Suspencse
+
+suspense：悬念
+
+等待异步组件时渲染一些额外的内容，让用户有更好的体验感
+
+## 其他
+
+### 全局API的转移
+
+Vue2.x 有许多全局API和配置
+1. 注册全局组件、组测全局指令等
+```js
+Vue.component('MyButton',{
+    data:() =>({
+       count: 0
+    }),
+   template: '<button @click="count++">Clicked {{count}} times.</button>'
+})
+
+Vue.directive('focus',{
+    inserted: el => el.focus()
+})
+```
+
+Vue3.0 中这些API做了调整
+
+| 2.x 全局API（Vue)            | 3.x 实例 API (app)                       |
+|---------------------------|----------------------------------------|
+| Vue.config.xxx            | app.config.xxx                         |
+| Vue.config.productionTip  | <Strong style="color:red">移除</Strong>  |
+| Vue.component             | app.component                          |
+| Vue.directive             | app.directive                          |
+| Vue.mixin                 | app.mixin                              |
+| Vue.use                   | app.use                                |
+| Vue.prototype             | app.config.globalProperties            |
 
