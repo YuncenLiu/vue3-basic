@@ -133,3 +133,6 @@ dist
 
 vue3_yun/node_modules
 vue3_yun_vite/node_modules
+
+.DS_Store
+.obsidian/
